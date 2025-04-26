@@ -1,0 +1,2 @@
+<PID>, <ACCION>, <RECURSO>, <CICLO>
+P1, READ, R1, 0
