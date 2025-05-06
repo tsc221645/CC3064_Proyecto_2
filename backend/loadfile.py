@@ -3,27 +3,24 @@ This file is used to load the .txt files into the program and "parse" them to be
 '''
 import pandas as pd
 
-#This function builds the processes provided by the .txt file
-def buildProcessesDF(filepath):
-    print("Build Processes")
-    processes_df = pd.read_csv(filepath, sep=',',header=0)
-    print(processes_df)
+def buildProcessesDF(filelike):
+    df = pd.read_csv(filelike, sep=',', header=None, names=["pid", "bt", "at", "priority"])
+    df["pid"] = df["pid"].astype(str).str.strip()
+    for col in ["bt", "at", "priority"]:
+        df[col] = pd.to_numeric(df[col], errors="coerce")  
+        df[col] = df[col].fillna(0).astype(int)            
+
+    return df.to_dict(orient="records")
+
+def buildResourcesDF(filelike):
+    df = pd.read_csv(filelike, sep=',', header=None, names=["recurso", "contador"])
+    return df.to_dict(orient="records")
+
+def buildActionsDF(filelike):
+    df = pd.read_csv(filelike, sep=',', header=None, names=["pid", "accion", "recurso", "ciclo"])
+    return df.to_dict(orient="records")
 
 
-# This function builds the resources provided by the .txt file
-def buildResourcesDF(filepath):
-    print("Build Resources")
-    resources_df = pd.read_csv(filepath, sep=',',header=0)
-    print(resources_df)
-
-
-# this function builds the actions provided by the .txt file
-def buildActionsDF(filepath):
-    print("Build Actions")
-    actions_df = pd.read_csv(filepath, sep=',',header=0)
-    print(actions_df)
-
-
-buildProcessesDF('examples/processes.txt')
+'''buildProcessesDF('examples/processes.txt')
 buildResourcesDF('examples/resources.txt')
-buildActionsDF('examples/actions.txt')
+buildActionsDF('examples/actions.txt')'''
