@@ -437,7 +437,7 @@ class SchedulingSimulatorApp:
         self.simulation_thread.start()
 
     # Show simulation animation for dinamic gantt diagram
-    def animate_simulation(self, timeline):
+    def animate_simulation(self, timeline, on_finish=None):
         def animate():
             self.ax.clear()
             self.ax.set_title("Diagrama de Gantt (Dinámico)")
@@ -449,23 +449,18 @@ class SchedulingSimulatorApp:
                 self.canvas.draw()
                 return
 
-            # Unique processes
             processes = sorted(list({t['PID'] for t in timeline}))
             y_ticks = range(len(processes))
             self.ax.set_yticks(y_ticks)
             self.ax.set_yticklabels(processes)
 
-            # Color per process
             colors = plt.cm.tab20.colors
             color_map = {pid: colors[i % len(colors)] for i, pid in enumerate(processes)}
 
-            # Diagram drawing
-            current_end = 0
             for segment in timeline:
                 pid = segment['PID']
                 start = segment['start']
                 end = segment['end']
-                duration = end - start
                 y = processes.index(pid)
 
                 for tick in range(start, end):
@@ -477,7 +472,6 @@ class SchedulingSimulatorApp:
                     self.ax.set_yticks(y_ticks)
                     self.ax.set_yticklabels(processes)
 
-                    # Painting the current cicle
                     for s in timeline:
                         if s['start'] >= tick:
                             continue
@@ -493,7 +487,6 @@ class SchedulingSimulatorApp:
                     self.root.update()
                     time.sleep(0.2)
 
-            # Final Gant Diagram
             self.ax.clear()
             self.ax.set_title("Diagrama de Gantt")
             self.ax.set_xlabel("Ciclos")
@@ -501,6 +494,7 @@ class SchedulingSimulatorApp:
             self.ax.grid(True)
             self.ax.set_yticks(y_ticks)
             self.ax.set_yticklabels(processes)
+
             for segment in timeline:
                 pid = segment['PID']
                 start = segment['start']
@@ -508,22 +502,23 @@ class SchedulingSimulatorApp:
                 y = processes.index(pid)
                 self.ax.broken_barh([(start, duration)], (y - 0.4, 0.8),
                                     facecolors=color_map[pid], edgecolor='black')
+
             self.ax.set_xlim(0, max(t['end'] for t in timeline) + 1)
             self.canvas.draw()
 
-        # Execute in separated thread to avoid freezing the UI
+            if on_finish:
+                self.root.after(0, on_finish)
+
         threading.Thread(target=animate, daemon=True).start()
 
+
     def execute_scheduling(self, scheduler):
-        #Executes in a separated thread
         try:
-            # Execute simultation
             timeline, metrics = scheduler.run()
-            
-            # Refresh the interface of the main thread
-            self.root.after(0, lambda: self.display_results(timeline, metrics))
-            self.root.after(0, lambda: self.animate_simulation(timeline))
-            
+            self.root.after(0, lambda: self.animate_simulation(
+                timeline,
+                on_finish=lambda: self.display_results(timeline, metrics)
+            ))
         except Exception as e:
             self.root.after(0, lambda: messagebox.showerror("Error", f"Error en simulación:\n{str(e)}"))
         finally:
