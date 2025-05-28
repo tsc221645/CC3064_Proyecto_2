@@ -107,7 +107,6 @@ class SchedulingSimulatorApp:
     
     #Setup action buttons for the GUI
     def setup_action_buttons(self):
-        
         self.action_frame = ctk.CTkFrame(self.control_frame)
         self.action_frame.grid(row=10, column=0, padx=5, pady=(20,5), sticky="ew", columnspan=2)
         
@@ -121,16 +120,40 @@ class SchedulingSimulatorApp:
         )
         self.start_btn.pack(fill="x", pady=2)
         
-        # Pause button
-        self.pause_btn = ctk.CTkButton(
+        # Info button for scheduling mode
+        self.process_info_btn = ctk.CTkButton(
             self.action_frame,
-            text="Pausar",
-            command=self.pause_simulation,
-            state="disabled",
-            fg_color="orange",
-            hover_color="dark orange"
+            text="Mostrar Info de Procesos",
+            command=self.show_process_info,
+            fg_color="#1e90ff",
+            hover_color="#187bcd"
         )
-        self.pause_btn.pack(fill="x", pady=2)
+        self.process_info_btn.pack(fill="x", pady=2)
+        
+        # Info buttons for sync mode (hidden by default)
+        self.resource_info_btn = ctk.CTkButton(
+            self.action_frame,
+            text="Mostrar Recursos",
+            command=self.show_resource_info,
+            fg_color="#1e90ff",
+            hover_color="#187bcd"
+        )
+        
+        self.action_info_btn = ctk.CTkButton(
+            self.action_frame,
+            text="Mostrar Acciones",
+            command=self.show_action_info,
+            fg_color="#1e90ff",
+            hover_color="#187bcd"
+        )
+        
+        self.sync_process_info_btn = ctk.CTkButton(
+            self.action_frame,
+            text="Mostrar Procesos",
+            command=self.show_sync_process_info,
+            fg_color="#1e90ff",
+            hover_color="#187bcd"
+        )
         
         # restart Button
         self.reset_btn = ctk.CTkButton(
@@ -144,7 +167,6 @@ class SchedulingSimulatorApp:
     
     #Metrics Display setup 
     def setup_metrics_display(self):
-        
         self.metrics_label = ctk.CTkLabel(
             self.metrics_frame,
             text="Métricas:\n- Tiempo de espera promedio: -\n- Tiempo de retorno promedio: -\n- Tiempo de respuesta promedio: -",
@@ -215,6 +237,12 @@ class SchedulingSimulatorApp:
             self.load_resource_btn.pack_forget()
             self.load_action_btn.pack_forget()
             
+            # Show scheduling info button and hide sync info buttons
+            self.process_info_btn.pack(fill="x", pady=2)
+            self.resource_info_btn.pack_forget()
+            self.action_info_btn.pack_forget()
+            self.sync_process_info_btn.pack_forget()
+            
         else:
             # Show synchro controls
             self.sync_label.grid()
@@ -227,8 +255,76 @@ class SchedulingSimulatorApp:
             self.quantum_entry.grid_remove()
             self.load_resource_btn.pack(fill="x", pady=2)
             self.load_action_btn.pack(fill="x", pady=2)
+            
+            # Hide scheduling info button and show sync info buttons
+            self.process_info_btn.pack_forget()
+            self.resource_info_btn.pack(fill="x", pady=2)
+            self.action_info_btn.pack(fill="x", pady=2)
+            self.sync_process_info_btn.pack(fill="x", pady=2)
 
         self.update_files_label()
+    
+    # Show process information for scheduling mode
+    def show_process_info(self):
+        if not self.processes:
+            messagebox.showwarning("Advertencia", "No hay procesos cargados")
+            return
+
+        info = "Información de Procesos:\n\n"
+        for process in self.processes:
+            info += f"PID: {process.get('PID', 'N/A')}\n"
+            info += f"Tiempo de llegada (AT): {process.get('AT', 'N/A')}\n"
+            info += f"Duración (BT): {process.get('BT', 'N/A')}\n"
+            info += f"Prioridad: {process.get('Priority', 'N/A')}\n"
+            info += "------------------------\n"
+
+        messagebox.showinfo("Información de Procesos", info)
+
+    
+    # Show resource information for sync mode
+    def show_resource_info(self):
+        if not self.resources:
+            messagebox.showwarning("Advertencia", "No hay recursos cargados")
+            return
+
+        info = "Información de Recursos:\n\n"
+        for resource in self.resources:
+            info += f"Nombre: {resource.get('name', 'N/A')}\n"
+            info += f"Cantidad: {resource.get('count', 'N/A')}\n"
+            info += "------------------------\n"
+
+        messagebox.showinfo("Información de Recursos", info)
+
+
+    def show_action_info(self):
+        if not self.actions:
+            messagebox.showwarning("Advertencia", "No hay acciones cargadas")
+            return
+
+        info = "Información de Acciones:\n\n"
+        for action in self.actions:
+            info += f"PID: {action.get('PID', 'N/A')}\n"
+            info += f"Acción: {action.get('action', 'N/A')}\n"
+            info += f"Recurso: {action.get('resource', 'N/A')}\n"
+            info += f"Ciclo: {action.get('cycle', 'N/A')}\n"
+            info += "------------------------\n"
+
+        messagebox.showinfo("Información de Acciones", info)
+
+
+    def show_sync_process_info(self):
+        if not self.processes:
+            messagebox.showwarning("Advertencia", "No hay procesos cargados")
+            return
+            
+        info = "Información de Procesos (Sincronización):\n\n"
+        for process in self.processes:
+            info += f"PID: {process.get('PID', 'N/A')}\n"
+            info += f"Estado: {process.get('status', 'N/A')}\n"
+            info += f"Recurso asignado: {process.get('assigned_resource', 'Ninguno')}\n"
+            info += "------------------------\n"
+        
+        messagebox.showinfo("Información de Procesos", info)
     
     #Load process file
     def load_process_file(self):
@@ -338,7 +434,6 @@ class SchedulingSimulatorApp:
         )
         self.simulation_running = True
         self.start_btn.configure(state="disabled")
-        self.pause_btn.configure(state="normal")
         self.simulation_thread.start()
 
     # Show simulation animation for dinamic gantt diagram
@@ -451,7 +546,6 @@ class SchedulingSimulatorApp:
         )
         self.simulation_running = True
         self.start_btn.configure(state="disabled")
-        self.pause_btn.configure(state="normal")
         self.simulation_thread.start()
     
     #Execute synchro
@@ -463,10 +557,6 @@ class SchedulingSimulatorApp:
         self.root.after(0, lambda: self.display_sync_results(timeline))
         self.root.after(0, lambda: self.animate_sync_simulation(timeline))
         self.root.after(0, lambda: self.simulation_finished())
-    
-    def pause_simulation(self):
-        #pending implementation
-        pass
     
     #Reset simultation after generating chart or loading processes
     def reset_simulation(self):
@@ -487,7 +577,6 @@ class SchedulingSimulatorApp:
     def simulation_finished(self):
         self.simulation_running = False
         self.start_btn.configure(state="normal")
-        self.pause_btn.configure(state="disabled")
     
     #Show metrics as results in the UI
     def display_results(self, timeline, metrics):
