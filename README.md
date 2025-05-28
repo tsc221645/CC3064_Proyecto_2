@@ -30,3 +30,16 @@ Para poder correr el proyecto debe tener instalados los paquetes de:
 Es recomendado que utilice un ambiente virtual, ya sea utilizando pyenv o conda.
 Luego de esto, se corre:
 ```python main.py```
+
+## Preview del Proyecto
+![image](<https://github.com/user-attachments/assets/9453efae-173b-45e2-b1c8-cd3fc2b235cd> "Diagrama de Gantt utilizando el algoritmo FIFO")
+![image](<https://github.com/user-attachments/assets/80201f3d-a347-40e3-8a52-b0a63a1be870> "Diagrama de Gantt utilizando el algoritmo SJF")
+![image](<https://github.com/user-attachments/assets/96ec74a5-f13e-4d68-8e0a-cab16874f143> "Diagrama utilizando semaforo como mecanismo de sincronizacion")
+![image](<https://github.com/user-attachments/assets/498aa866-f378-408c-9b3f-966cc44464ba> "Informacion de los procesos cargados")
+![image](<https://github.com/user-attachments/assets/d1c9fae6-64ea-4088-82d8-b898057819d5> "Informacion de los recursos cargados")
+![image](<https://github.com/user-attachments/assets/13a52b9a-1e65-46c8-88d5-946feb509ca8> "Informacion de las acciones cargadas")
+
+
+
+
+
