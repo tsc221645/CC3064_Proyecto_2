@@ -18,7 +18,7 @@ El proycto consiste en simular los distintos algoritmos de planificación y esce
 + Semáforos
 
 ## Tecnologías Utilizadas
-[![Programming Languages](https://skillicons.dev/icons?i=py&perline=1)]
+[Programming Languages](https://skillicons.dev/icons?i=py&perline=1)
 - [CustomTkinter](https://customtkinter.tomschimansky.com)
 
 
