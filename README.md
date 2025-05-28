@@ -19,7 +19,14 @@ El proycto consiste en simular los distintos algoritmos de planificación y esce
 
 ## Tecnologías Utilizadas
 [![Programming Languages](https://skillicons.dev/icons?i=py&perline=1)]
-[streamlit](https://streamlit.io)
+- [CustomTkinter](https://customtkinter.tomschimansky.com)
 
 
 ## ¿Cómo correr el proyecto?
+Para poder correr el proyecto debe tener instalados los paquetes de:
+- Tkinter
+- Customtkinter
+- Matplotlib
+Es recomendado que utilice un ambiente virtual, ya sea utilizando pyenv o conda.
+Luego de esto, se corre:
+```python main.py```
