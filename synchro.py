@@ -14,6 +14,7 @@ class SyncSimulator:
         raise NotImplementedError("Must implement remaining subclasses")
 
 # Mutex Implementation
+#binary with mutual exclusion (unlock and lock)
 class MutexSimulator(SyncSimulator):
     def __init__(self, processes, resources, actions):
         super().__init__(processes, resources, actions)
@@ -70,6 +71,8 @@ class MutexSimulator(SyncSimulator):
         return self.timeline
 
 # Semaphore implementation
+#Counter, with multiple resources and many processes
+#wait and signal
 class SemaphoreSimulator(SyncSimulator):
     def run(self):
         #Initialize semaphores

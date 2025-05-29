@@ -47,6 +47,7 @@ class Scheduler:
         }
 
 #Implmentation of FIFO Scheduling Algorithm -----------------------------------------------------------------------------------------
+#Executed in order of arrival without priority or interruption
 class FIFO(Scheduler):
     def run(self):
         # Order processes by arrival time -> who arrives first is served first
@@ -79,6 +80,7 @@ class FIFO(Scheduler):
         return timeline, self.calculate_metrics()
 
 #Shortest Job First Implementation -> Selects the one with the lowest burt time (BT) -------------------------------------------
+#Process executes the process with the lowest execution time or burst time. Not interrupted
 class SJF(Scheduler):
     def run(self):
         #Orders by arrival time and burst time
@@ -121,6 +123,7 @@ class SJF(Scheduler):
         return self.timeline, self.calculate_metrics()
 
 #Implementation de Shortest Remaining Time
+#The process with the lowest remaining time is executed, interruption allowed
 class SRT(Scheduler):
     def run(self):
         # Copies processes
@@ -187,6 +190,8 @@ class SRT(Scheduler):
         return self.timeline, metrics
     
 #Implementation of Round Robin -------------------------------------------------------------------------------------
+#Process is assigned quantum or a time block
+#if it hasnt finished, it is placed at the end of the tail
 class RoundRobin(Scheduler):
     def __init__(self, processes, quantum):
         super().__init__(processes)
@@ -272,6 +277,7 @@ class RoundRobin(Scheduler):
         self.timeline = merged
 
 #Implementation of Priority Scheduling ------------------------------------------------------------------------------------------------
+#Highest priority to lowest priority
 class PriorityScheduling(Scheduler):
     def run(self):
         processes = [p.copy() for p in self.processes]
