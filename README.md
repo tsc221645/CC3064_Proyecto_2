@@ -30,6 +30,7 @@ Para poder correr el proyecto debe tener instalados los paquetes de:
 Es recomendado que utilice un ambiente virtual, ya sea utilizando pyenv o conda.
 Luego de esto, se corre:
 ```python main.py```
+Luego de ejecutar el archivo main.py podra seleccionar los archivos a cargar segun las acciones que desee realizar. Asimismo, puede seleccionar el algoritmo de planificacion o el escenario de sincronización. Se puede visualizar la informacion de los procesos, acciones y recursos cargados, reiniciar la simulacion, correr la simulación y visualizar las estadisticas.
 
 ## Preview del Proyecto
 ![image](<https://github.com/user-attachments/assets/9453efae-173b-45e2-b1c8-cd3fc2b235cd> "Diagrama de Gantt utilizando el algoritmo FIFO")
